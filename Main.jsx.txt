@@ -1,0 +1,274 @@
+Here’s the complete content for all **four files** you need to create your BARTA app. Save these in the **same folder** (e.g., `barta-app/`):
+
+---
+
+### 1. `index.html`  
+*(HTML boilerplate to load the app)*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BARTA Navigator</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans bg-gray-50 text-gray-900">
+  <div id="root"></div>
+
+  <!-- React & Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- App Code -->
+  <script type="text/babel" src="main.jsx"></script>
+</body>
+</html>
+```
+
+---
+
+### 2. `main.jsx`  
+*(Your React app code)*
+```jsx
+const { useState } = React;
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('home');
+  
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-blue-600 text-white p-4 shadow-lg">
+        <h1 className="text-2xl font-bold">BARTA Navigator</h1>
+        <p className="text-sm">Reading, PA Transit Guide</p>
+      </header>
+
+      {/* Navigation Tabs */}
+      <nav className="flex justify-around bg-white border-b sticky top-0 z-10">
+        {['home', 'schedules', 'transfers', 'contact'].map(tab => (
+          <button 
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`py-3 px-2 capitalize font-medium ${activeTab === tab 
+              ? 'text-blue-600 border-b-2 border-blue-600' 
+              : 'text-gray-600'}`}
+          >
+            {tab}
+          </button>
+        ))}
+      </nav>
+
+      {/* Content */}
+      <main className="p-4">
+        {activeTab === 'home' && (
+          <div className="space-y-6 animate-fadeIn">
+            <section className="bg-white rounded-xl p-4 shadow-md">
+              <h2 className="text-xl font-bold mb-2">Route 1 Overview</h2>
+              <p>Temple University to Downtown Reading via 5th Street</p>
+              <ul className="mt-2 list-disc pl-5 space-y-1">
+                <li>Operates Monday-Friday</li>
+                <li>Connects with multiple routes at BARTA Terminal</li>
+                <li>Key stops: Temple University, 5th & Cherry, BARTA Terminal</li>
+              </ul>
+            </section>
+
+            <section className="bg-white rounded-xl p-4 shadow-md">
+              <h2 className="text-xl font-bold mb-2">Route 8 Overview</h2>
+              <p>Downtown Reading to Mount PENN via Perkiomen Avenue</p>
+              <ul className="mt-2 list-disc pl-5 space-y-1">
+                <li>Perfect for Mount PENN commuters</li>
+                <li>Connects at BARTA Terminal (Route 1 transfer)</li>
+                <li>Key stops: BARTA Terminal, 5th & Penn, Penn State Berks</li>
+              </ul>
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'schedules' && (
+          <div className="space-y-6 animate-fadeIn">
+            <section className="bg-white rounded-xl p-4 shadow-md overflow-x-auto">
+              <h2 className="text-xl font-bold mb-4">Route 1 Schedule</h2>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-2 text-left">Inbound (Reading)</th>
+                    <th className="px-4 py-2 text-left">Outbound (Temple)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  <tr>
+                    <td className="px-4 py-2">6:15 AM</td>
+                    <td className="px-4 py-2">7:00 AM</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-2">7:30 AM</td>
+                    <td className="px-4 py-2">8:15 AM</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-2">8:45 AM</td>
+                    <td className="px-4 py-2">9:30 AM</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-2">10:00 AM</td>
+                    <td className="px-4 py-2">10:45 AM</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-2">11:15 AM</td>
+                    <td className="px-4 py-2">12:00 PM</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-2">12:30 PM</td>
+                    <td className="px-4 py-2">1:15 PM</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p className="mt-3 text-sm text-gray-500">
+                *Schedules effective until next BARTA update. Check barta.org for real-time info
+              </p>
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'transfers' && (
+          <div className="space-y-6 animate-fadeIn">
+            <section className="bg-white rounded-xl p-4 shadow-md">
+              <h2 className="text-xl font-bold mb-3">Route 1 → Route 8 Transfer</h2>
+              <ol className="list-decimal pl-5 space-y-2">
+                <li>Arrive at BARTA Terminal via Route 1</li>
+                <li>Check Route 8 schedule at terminal kiosk</li>
+                <li>Route 8 departs from Bay 2 at terminal</li>
+                <li>Valid transfer within 90 minutes of initial boarding</li>
+                <li>Use same payment method for both routes</li>
+              </ol>
+              
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <h3 className="font-semibold">Pro Tip:</h3>
+                <p>Allow 10-15 minutes for transfers during peak hours</p>
+              </div>
+              
+              <div className="mt-4">
+                <img 
+                  src="https://www.barta.org/wp-content/uploads/2020/01/BARTA-System-Map-2021-1.jpg" 
+                  alt="BARTA System Map" 
+                  className="w-full h-auto rounded"
+                />
+              </div>
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'contact' && (
+          <div className="space-y-6 animate-fadeIn">
+            <section className="bg-white rounded-xl p-4 shadow-md">
+              <h2 className="text-xl font-bold mb-4">Contact BARTA</h2>
+              
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <span>(610) 376-4278</span>
+                </div>
+                
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <a href="mailto:info@barta.org" className="text-blue-600">info@barta.org</a>
+                </div>
+                
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <a href="https://www.barta.org/contact/" target="_blank" rel="noopener noreferrer" className="text-blue-600">
+                    100 BARTA Plaza, Reading, PA 19602
+                  </a>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="font-semibold mb-2">Real-Time Tracking</h3>
+                <a href="https://www.barta.org/real-time-tracking/" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                  Track Your Bus
+                </a>
+              </div>
+            </section>
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-100 p-4 text-center text-sm text-gray-500">
+        <p>BARTA Navigator • Built with React & TailwindCSS</p>
+        <p className="mt-1">For official schedules, visit <a href="https://www.barta.org" className="underline">barta.org</a></p>
+      </footer>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.5s ease-out forwards;
+        }
+      `}</style>
+    </div>
+  );
+}
+```
+
+---
+
+### 3. `tailwind.css`  
+*(Tailwind CSS framework)*  
+Instead of manually creating this file, use the CDN link in `index.html`. If you want a local copy, download it from:  
+👉 [Tailwind CSS CDN](https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css)
+
+---
+
+### 4. `README.md`  
+*(Project description for GitHub)*
+```markdown
+# BARTA Navigator App
+A mobile-optimized guide for BARTA Route 1 and Route 8 schedules in Reading, PA.
+
+## How to Use
+1. Deploy to GitHub Pages
+2. Share the link with friends
+3. Add to iPhone home screen for app-like experience
+
+Built with React + TailwindCSS.
+```
+
+---
+
+### 📁 Folder Structure
+```
+barta-app/
+├── index.html       ← Main HTML file
+├── main.jsx         ← React app code
+├── tailwind.css     ← Tailwind CSS (or use CDN)
+└── README.md        ← Project description
+```
+
+### 🚀 Deployment Instructions
+1. Create a GitHub repo (e.g., `barta-app`)
+2. Upload all files to the root directory
+3. Enable GitHub Pages in **Settings > Pages**
+4. Share the public URL (e.g., `https://[your-username].github.io/barta-app/`)
+
+Let me know if you need help uploading these files! 😊
